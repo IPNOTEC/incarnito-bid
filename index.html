@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INCARNITO · SMART BIDDING · 108 CARS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #00e676;
+            --primary-dark: #011A10;
+            --rose-gold: #D4A59A;
+            --rose-dark: #B76E79;
+            --bg-deep: #0a0c0a;
+            --card-bg: #0f1410;
+            --border-light: #1f3a2a;
+            --strike-red: #ff5f5f;
+            --win-gold: #ffd966;
+            --warning-orange: #ff9900;
+            --success-green: #00cc66;
+            --select-blue: #3399ff;
+        }
+
+        body {
+            background: var(--bg-deep);
+            font-family: 'Inter', sans-serif;
+            color: #f0f0f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: #0f1410;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-green);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .budget-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #1a2a1a;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--primary-green);
+        }
+
+        .budget-input {
+            background: #0f1a0f;
+            border: 1px solid #3a5a4a;
+            padding: 10px 15px;
+            border-radius: 30px;
+            color: white;
+            font-size: 16px;
+            width: 150px;
+        }
+
+        .wallet-box {
+            background: #1a2a1a;
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: 1px solid var(--primary-green);
+        }
+
+        .wallet-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-green);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .strike-box {
+            background: #3a1a1a;
+            padding: 10px 25px;
+            border-radius: 50px;
+            color: var(--strike-red);
+            border: 1px solid var(--strike-red);
+            font-weight: 600;
+        }
+
+        .timer-box {
+            background: #000;
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: 2px solid var(--primary-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 18px;
+            color: var(--primary-green);
+        }
+
+        .phase-badge {
+            background: var(--win-gold);
+            color: black;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Rules Panel */
+        .rules-panel {
+            background: #0a1a0e;
+            border: 2px solid var(--rose-gold);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .rules-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .rule-card {
+            background: rgba(0,0,0,0.3);
+            border-left: 4px solid var(--rose-gold);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .rule-card h4 {
+            color: var(--rose-gold);
+            margin-bottom: 10px;
+        }
+
+        .rule-card li {
+            font-size: 12px;
+            color: #ccc;
+            margin-bottom: 5px;
+            padding-left: 15px;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Cars Grid */
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .car-card {
+            background: #0f1410;
+            border: 1px solid #2a4a3a;
+            border-radius: 16px;
+            padding: 15px;
+            transition: 0.2s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .car-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--rose-gold);
+        }
+
+        .car-card.selected {
+            border: 3px solid var(--select-blue);
+            box-shadow: 0 0 20px rgba(51, 153, 255, 0.3);
+        }
+
+        .car-card.within-budget {
+            border-left: 8px solid var(--success-green);
+        }
+
+        .car-card.above-budget {
+            border-left: 8px solid var(--warning-orange);
+        }
+
+        .car-card.bidding-closed {
+            opacity: 0.7;
+            filter: grayscale(0.5);
+            pointer-events: none;
+        }
+
+        .car-type {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        .type-NEW {
+            background: #1e4a2a;
+            color: #00ff9d;
+        }
+
+        .type-USED {
+            background: #4a3a1a;
+            color: #ffd966;
+        }
+
+        .budget-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 5px 0;
+        }
+
+        .badge-within {
+            background: #1e4a2a;
+            color: #00ff9d;
+        }
+
+        .badge-above {
+            background: #4a2a1a;
+            color: #ff9900;
+        }
+
+        .bid-btn {
+            width: 100%;
+            padding: 12px;
+            background: #1e3a2a;
+            border: none;
+            color: white;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .bid-btn:hover:not(:disabled) {
+            background: #2a5a3a;
+        }
+
+        .bid-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .winner-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--win-gold);
+            color: black;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .closed-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ff4444;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Side Panels */
+        .panel {
+            background: #0f1410;
+            border: 1px solid #2a4a3a;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            color: var(--rose-gold);
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a4a3a;
+        }
+
+        /* Wins List */
+        .wins-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .win-item {
+            background: #1a3a1a;
+            border: 1px solid #3a5a4a;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .win-item:hover {
+            transform: translateX(5px);
+            border-color: var(--win-gold);
+        }
+
+        .win-item.selected {
+            border: 3px solid var(--win-gold);
+            background: #1e4a2a;
+        }
+
+        .win-item.selected::after {
+            content: '✓ SELECTED TO BUY';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--win-gold);
+            color: black;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .win-checkbox {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--win-gold);
+        }
+
+        /* Buy Button */
+        .buy-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #006633, #00b359);
+            border: none;
+            color: white;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 15px 0;
+            transition: 0.2s;
+        }
+
+        .buy-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,230,100,0.3);
+        }
+
+        .buy-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* SPOC Card */
+        .spoc-card {
+            background: linear-gradient(135deg, #0a1a1a, #1a2a1a);
+            border: 2px solid var(--rose-gold);
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 15px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .spoc-field {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border-left: 4px solid var(--rose-gold);
+        }
+
+        .spoc-label {
+            color: #aaa;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .spoc-value {
+            color: var(--rose-gold);
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .spoc-contact {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #0a1a1a;
+            border-radius: 12px;
+            border: 1px solid var(--rose-gold);
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--rose-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-size: 20px;
+        }
+
+        .contact-details {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .contact-designation {
+            color: var(--rose-gold);
+            font-size: 14px;
+        }
+
+        .contact-phone {
+            color: var(--primary-green);
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* Countdown Timer */
+        .countdown-timer {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            color: var(--win-gold);
+            text-align: center;
+            padding: 15px;
+            background: #000;
+            border-radius: 12px;
+            margin: 10px 0;
+            border: 2px solid var(--win-gold);
+        }
+
+        /* Demo Controls */
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .demo-btn {
+            padding: 8px 15px;
+            background: #2a3a2a;
+            border: 1px solid #4a6a5a;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .demo-btn.success {
+            background: #1e4a2a;
+            border-color: var(--primary-green);
+        }
+
+        .demo-btn.warning {
+            background: #4a3a1a;
+            border-color: #ff9900;
+        }
+
+        .demo-btn.danger {
+            background: #4a1a1a;
+            border-color: #ff4444;
+        }
+
+        .demo-btn.primary {
+            background: #1a3a4a;
+            border-color: #3399ff;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #0f1410;
+            border: 2px solid var(--rose-gold);
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        .strike-history {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .winner-announcement {
+            background: linear-gradient(135deg, #ffd966, #ffaa00);
+            color: black;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin: 10px 0;
+            font-weight: 700;
+            animation: slideIn 0.5s ease;
+        }
+
+        .eod-summary {
+            background: #1a2a3a;
+            border: 2px solid #ffd966;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <div class="logo">
+                    <i class="fas fa-car"></i> INCARNITO · 108 CARS
+                </div>
+                <div class="budget-section">
+                    <span style="color:#aaa;">MY BUDGET:</span>
+                    <input type="number" id="budgetInput" class="budget-input" value="1500000" step="100000" min="100000">
+                    <span style="color:var(--primary-green);" id="budgetDisplay">₹15,00,000</span>
+                </div>
+                <div class="wallet-box">
+                    <span style="color:#aaa; font-size:12px;">WALLET</span>
+                    <div class="wallet-amount" id="walletDisplay">₹25,000</div>
+                </div>
+                <div class="strike-box" id="strikeDisplay">
+                    <i class="fas fa-exclamation-triangle"></i> <span id="strikeCount">0</span>/3
+                </div>
+                <div class="timer-box" id="marketTimer">
+                    10:00:00 PM
+                </div>
+                <div id="phaseBadge" class="phase-badge">
+                    ⚡ BIDDING PHASE
+                </div>
+            </div>
+
+            <!-- Rules Panel -->
+            <div class="rules-panel">
+                <h3 style="color:var(--rose-gold); margin-bottom:10px;">📋 TRANSPARENT BIDDING RULES</h3>
+                <div class="rules-content">
+                    <div class="rule-card">
+                        <h4>💰 BUDGET & BIDDING</h4>
+                        <ul>
+                            <li>Enter your budget - cars show as ✓ In Budget or ⚠️ Above</li>
+                            <li>Bid on ANY car (₹1001 per bid) - unlimited</li>
+                            <li>Each bid gets unique timestamp</li>
+                        </ul>
+                    </div>
+                    <div class="rule-card">
+                        <h4>🏆 WINNER LOGIC</h4>
+                        <ul>
+                            <li>Highest bidder on each car WINS</li>
+                            <li>If tie → Earliest timestamp wins</li>
+                            <li>You can win multiple cars</li>
+                            <li>But can ONLY BUY ONE per day</li>
+                        </ul>
+                    </div>
+                    <div class="rule-card">
+                        <h4>💸 MONEY FLOW</h4>
+                        <ul>
+                            <li>Each bid: ₹1001 deducted</li>
+                            <li>WIN + BUY: ₹1001 kept, pay ₹1,00,001</li>
+                            <li>WIN + DON'T BUY: ₹1001 forfeited</li>
+                            <li>DON'T WIN: ₹1001 auto-refunded</li>
+                        </ul>
+                    </div>
+                    <div class="rule-card">
+                        <h4>📞 AFTER BUYING</h4>
+                        <ul>
+                            <li>SPOC assigned with direct contact</li>
+                            <li>Car delisted immediately</li>
+                            <li>Complete purchase within 24h</li>
+                            <li>3 strikes = Permanent block</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-grid">
+            <!-- Cars Grid -->
+            <div class="panel">
+                <div class="panel-title">
+                    <i class="fas fa-car"></i> AVAILABLE CARS (108)
+                    <span style="float:right; font-size:13px;" id="carsCount">108</span>
+                </div>
+                <div class="cars-grid" id="carsGrid">
+                    <!-- Cars loaded here -->
+                </div>
+            </div>
+
+            <!-- Side Panels -->
+            <div>
+                <!-- Active Bids -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <i class="fas fa-list"></i> YOUR ACTIVE BIDS
+                    </div>
+                    <div id="bidsList" style="max-height:150px; overflow-y:auto;">
+                        <div style="text-align:center; color:#666; padding:20px;">No bids yet</div>
+                    </div>
+                </div>
+
+                <!-- Winner Announcement Section -->
+                <div id="winnerAnnouncementPanel" class="panel hidden">
+                    <div class="winner-announcement" id="winnerAnnouncement">
+                        🏆 WINNERS ANNOUNCED! Check Your Wins Below 🏆
+                    </div>
+                </div>
+
+                <!-- Your Wins Section -->
+                <div class="panel" id="winsPanel">
+                    <div class="panel-title">
+                        <i class="fas fa-trophy"></i> YOUR WINS TODAY
+                        <span style="float:right; font-size:12px; color:#ffd966;">Select ONE to buy</span>
+                    </div>
+                    <div class="wins-container" id="winsList">
+                        <!-- Wins loaded here -->
+                    </div>
+
+                    <!-- Buy Button (enabled only when one win is selected and in buy phase) -->
+                    <button class="buy-btn" id="buyButton" onclick="payAdvance()" disabled>
+                        PAY ₹1,00,001 & BUY SELECTED CAR
+                    </button>
+
+                    <!-- Countdown Timer -->
+                    <div id="countdownSection" class="hidden">
+                        <div class="countdown-timer" id="paymentTimer">15:00</div>
+                        <p class="info-text">Time left to pay advance (15 minutes)</p>
+                    </div>
+                </div>
+
+                <!-- SPOC Section (shows after buying) -->
+                <div class="panel hidden" id="spocPanel">
+                    <div class="panel-title">
+                        <i class="fas fa-user-tie"></i> YOUR ASSIGNED SPOC
+                    </div>
+                    <div id="spocDetails">
+                        <!-- SPOC details loaded here -->
+                    </div>
+                </div>
+
+                <!-- EOD Summary Panel -->
+                <div class="panel hidden" id="eodPanel">
+                    <div class="panel-title">
+                        <i class="fas fa-chart-line"></i> END OF DAY SUMMARY
+                    </div>
+                    <div id="eodSummary" class="eod-summary">
+                        <!-- EOD summary loaded here -->
+                    </div>
+                </div>
+
+                <!-- Demo Controls -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <i class="fas fa-flask"></i> DEMO CONTROLS
+                    </div>
+                    <div class="demo-controls">
+                        <button class="demo-btn primary" onclick="emulate10PM()">
+                            ⏰ EMULATE 10 PM (Close Bids)
+                        </button>
+                        <button class="demo-btn success" onclick="emulateWinnerAnnouncement()">
+                            🏆 10:01 PM - ANNOUNCE WINNERS
+                        </button>
+                        <button class="demo-btn warning" onclick="emulateEndOfDay()">
+                            🌙 END OF DAY (11:59 PM)
+                        </button>
+                        <button class="demo-btn success" onclick="simulateWinner()">
+                            🏆 SIMULATE WINNER (Quick Demo)
+                        </button>
+                        <button class="demo-btn" onclick="addStrike()">
+                            ⚠️ ADD STRIKE
+                        </button>
+                        <button class="demo-btn" onclick="resetStrikes()">
+                            ✅ RESET STRIKES
+                        </button>
+                        <button class="demo-btn" onclick="showWithdrawalModal()">
+                            💰 WITHDRAW
+                        </button>
+                        <button class="demo-btn success" onclick="addFunds()">
+                            ➕ ADD ₹10,000
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Withdrawal Modal -->
+        <div id="withdrawalModal" class="modal">
+            <div class="modal-content">
+                <h3 style="color:var(--rose-gold); margin-bottom:20px;">WITHDRAW TO BANK</h3>
+                <div style="margin-bottom:15px;">
+                    <label style="color:#aaa;">Amount (₹)</label>
+                    <input type="number" id="withdrawAmount" class="budget-input" style="width:100%; margin-top:5px;" value="10000" oninput="updateTaxCalculation()">
+                </div>
+                <div class="tax-breakup" id="taxBreakup">
+                    <!-- Tax calculation -->
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button class="demo-btn success" style="flex:1;" onclick="processWithdrawal()">CONFIRM</button>
+                    <button class="demo-btn warning" style="flex:1;" onclick="closeWithdrawalModal()">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // INCARNITO - SMART BIDDING SYSTEM
+        // ============================================
+
+        // State Management
+        const STATE = {
+            user: {
+                budget: 1500000,
+                wallet: 25000,
+                strikes: 0,
+                isBlocked: false,
+                bids: [], // { carId, carName, amount, timestamp, timestampMs, bidFee }
+                wins: [], // { carId, carName, winningBid, timestamp, selected }
+                selectedWinForBuy: null,
+                spoc: null,
+                paymentDeadline: null
+            },
+            cars: [],
+            selectedCarForWinner: null,
+            system: {
+                phase: 'bidding', // 'bidding', 'winner-announcement', 'buy-phase', 'eod'
+                biddingClosed: false,
+                winnersAnnounced: false,
+                endOfDay: false
+            }
+        };
+
+        // Car Database
+        const BRANDS = [
+            { name: 'TATA', models: ['Nexon', 'Harrier', 'Safari', 'Altroz', 'Punch', 'Tiago'] },
+            { name: 'HYUNDAI', models: ['Creta', 'Venue', 'i20', 'Verna', 'Aura', 'Tucson'] },
+            { name: 'MARUTI', models: ['Swift', 'Baleno', 'Dzire', 'Brezza', 'Ertiga', 'XL6'] },
+            { name: 'KIA', models: ['Seltos', 'Sonet', 'Carens', 'EV6'] },
+            { name: 'TOYOTA', models: ['Fortuner', 'Innova', 'Glanza', 'Urban Cruiser'] },
+            { name: 'HONDA', models: ['City', 'Amaze', 'WR-V', 'Elevate'] },
+            { name: 'MAHINDRA', models: ['XUV700', 'Scorpio', 'Thar', 'Bolero'] },
+            { name: 'MG', models: ['Hector', 'Astor', 'Gloster', 'Comet'] },
+            { name: 'SKODA', models: ['Kushaq', 'Slavia', 'Superb'] },
+            { name: 'VOLKSWAGEN', models: ['Virtus', 'Taigun', 'Polo'] },
+            { name: 'RENAULT', models: ['Kiger', 'Triber', 'Kwid'] },
+            { name: 'NISSAN', models: ['Magnite', 'Sunny'] },
+            { name: 'FORD', models: ['Endeavour', 'Figo', 'Aspire'] },
+            { name: 'BMW', models: ['X1', 'X3', '3 Series', '5 Series'] },
+            { name: 'MERCEDES', models: ['A-Class', 'C-Class', 'GLA', 'GLC'] },
+            { name: 'AUDI', models: ['Q3', 'Q5', 'A4', 'A6'] },
+            { name: 'VOLVO', models: ['XC40', 'XC60', 'S60'] },
+            { name: 'JAGUAR', models: ['F-PACE', 'XE', 'XF'] }
+        ];
+
+        // Generate 108 cars
+        function generateCars() {
+            const cars = [];
+            for (let i = 1; i <= 108; i++) {
+                const brand = BRANDS[Math.floor(Math.random() * BRANDS.length)];
+                const model = brand.models[Math.floor(Math.random() * brand.models.length)];
+                const isNew = Math.random() > 0.4;
+                
+                const price = (Math.random() * 35 + 5) * 100000; // 5L to 40L
+                
+                cars.push({
+                    id: `CAR-${String(i).padStart(3,'0')}`,
+                    displayName: `${brand.name} ${model}`,
+                    type: isNew ? 'NEW' : 'USED',
+                    price: Math.round(price / 1000) * 1000,
+                    year: isNew ? 2024 : 2018 + Math.floor(Math.random() * 5),
+                    bids: [],
+                    isWinner: false,
+                    status: 'available' // 'available', 'sold'
+                });
+            }
+            return cars;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            STATE.cars = generateCars();
+            updateCarsGrid();
+            updateBidsList();
+            updateWinsList();
+            updateUI();
+            startMarketTimer();
+            
+            // Budget input listener
+            document.getElementById('budgetInput').addEventListener('input', (e) => {
+                STATE.user.budget = parseInt(e.target.value) || 1500000;
+                document.getElementById('budgetDisplay').textContent = '₹' + STATE.user.budget.toLocaleString();
+                updateCarsGrid();
+            });
+
+            // Set initial time to 9:45 PM for demo purposes
+            setInitialTime();
+        });
+
+        function setInitialTime() {
+            const timer = document.getElementById('marketTimer');
+            timer.innerHTML = '09:45:00 PM';
+        }
+
+        // Update Cars Grid
+        function updateCarsGrid() {
+            const grid = document.getElementById('carsGrid');
+            grid.innerHTML = '';
+            
+            STATE.cars.forEach(car => {
+                if (car.status === 'sold') return;
+                
+                const userBid = STATE.user.bids.find(b => b.carId === car.id);
+                const withinBudget = car.price <= STATE.user.budget;
+                const isWinner = STATE.user.wins.some(w => w.carId === car.id);
+                const isSelected = STATE.selectedCarForWinner === car.id;
+                
+                const card = document.createElement('div');
+                card.className = `car-card ${withinBudget ? 'within-budget' : 'above-budget'} ${isSelected ? 'selected' : ''} ${STATE.system.biddingClosed ? 'bidding-closed' : ''}`;
+                if (!STATE.system.biddingClosed) {
+                    card.onclick = () => selectCarForWinner(car.id);
+                }
+                
+                let buttonHtml = '';
+                if (userBid) {
+                    buttonHtml = `
+                        <div style="background:#2266aa30; padding:8px; border-radius:8px; margin-top:10px;">
+                            <span style="color:#99ccff;">✓ Bid: ₹${userBid.amount.toLocaleString()}</span>
+                            <div style="font-size:10px;">${userBid.timestamp}</div>
+                        </div>
+                    `;
+                } else if (STATE.system.biddingClosed) {
+                    buttonHtml = `<div class="closed-badge">🔒 BIDDING CLOSED</div>`;
+                } else {
+                    buttonHtml = `<button class="bid-btn" onclick="event.stopPropagation(); placeBid('${car.id}')" 
+                        ${STATE.user.strikes >= 3 ? 'disabled' : ''}>
+                        BID ₹1,001
+                    </button>`;
+                }
+                
+                card.innerHTML = `
+                    <span class="car-type type-${car.type}">${car.type}</span>
+                    ${isWinner ? '<span class="winner-badge">🏆 WINNER</span>' : ''}
+                    ${STATE.system.biddingClosed && !isWinner ? '<span class="closed-badge">🔒 CLOSED</span>' : ''}
+                    <div style="font-weight:600; margin:15px 0 5px;">${car.displayName}</div>
+                    <div style="font-size:12px; color:#888;">${car.id} · ${car.year}</div>
+                    <div style="font-size:18px; color:var(--primary-green); margin:10px 0;">
+                        ₹${car.price.toLocaleString()}
+                    </div>
+                    <div>
+                        <span class="budget-badge ${withinBudget ? 'badge-within' : 'badge-above'}">
+                            ${withinBudget ? '✓ In Budget' : '⚠️ Above Budget'}
+                        </span>
+                    </div>
+                    ${buttonHtml}
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            document.getElementById('carsCount').textContent = STATE.cars.filter(c => c.status !== 'sold').length;
+        }
+
+        // Place Bid
+        function placeBid(carId) {
+            if (STATE.system.biddingClosed) {
+                alert('❌ Bidding is closed. Please wait for winner announcement at 10:01 PM.');
+                return;
+            }
+            
+            if (STATE.user.strikes >= 3) {
+                alert('❌ You are blocked due to 3 strikes');
+                return;
+            }
+            
+            if (STATE.user.wallet < 1001) {
+                alert('Insufficient balance');
+                return;
+            }
+            
+            const car = STATE.cars.find(c => c.id === carId);
+            if (!car) return;
+            
+            // Deduct bid fee
+            STATE.user.wallet -= 1001;
+            
+            // Create bid with random amount around car price
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString() + '.' + String(now.getMilliseconds()).padStart(3,'0');
+            const bidAmount = Math.round((car.price + (Math.random() * 100000 - 50000)) / 1000) * 1000;
+            
+            const bid = {
+                carId: car.id,
+                carName: car.displayName,
+                amount: bidAmount,
+                timestamp: timestamp,
+                timestampMs: now.getTime(),
+                bidFee: 1001
+            };
+            
+            STATE.user.bids.push(bid);
+            car.bids.push({
+                userId: 'current',
+                amount: bidAmount,
+                timestamp: timestamp,
+                timestampMs: now.getTime()
+            });
+            
+            // Sort car bids
+            car.bids.sort((a, b) => b.amount - a.amount || a.timestampMs - b.timestampMs);
+            
+            updateCarsGrid();
+            updateBidsList();
+            updateUI();
+            
+            alert(`✅ Bid placed on ${car.displayName}\nYour bid: ₹${bidAmount.toLocaleString()}\nTimestamp: ${timestamp}`);
+        }
+
+        // Select car for winner simulation
+        function selectCarForWinner(carId) {
+            STATE.selectedCarForWinner = carId;
+            updateCarsGrid();
+        }
+
+        // Emulate 10 PM - Close Bidding
+        function emulate10PM() {
+            STATE.system.biddingClosed = true;
+            STATE.system.phase = 'bidding-closed';
+            
+            document.getElementById('phaseBadge').innerHTML = '🔒 BIDDING CLOSED - WAITING FOR WINNERS';
+            document.getElementById('phaseBadge').style.background = '#ff4444';
+            
+            // Show announcement
+            alert('⏰ 10:00 PM - Bidding is now CLOSED!\n\nWinners will be announced at 10:01 PM.\n\nYou can still select cars to simulate winners manually or click "ANNOUNCE WINNERS" at 10:01 PM.');
+            
+            updateCarsGrid();
+            updateUI();
+        }
+
+        // Emulate Winner Announcement at 10:01 PM
+        function emulateWinnerAnnouncement() {
+            if (!STATE.system.biddingClosed) {
+                alert('Please close bidding first (Emulate 10 PM)');
+                return;
+            }
+            
+            STATE.system.winnersAnnounced = true;
+            STATE.system.phase = 'winner-announcement';
+            
+            document.getElementById('phaseBadge').innerHTML = '🏆 WINNERS ANNOUNCED - BUY PHASE';
+            document.getElementById('phaseBadge').style.background = '#ffd966';
+            document.getElementById('phaseBadge').style.color = 'black';
+            
+            document.getElementById('winnerAnnouncementPanel').classList.remove('hidden');
+            
+            // Automatically determine winners based on highest bids
+            determineWinners();
+            
+            alert('🏆 10:01 PM - WINNERS ANNOUNCED!\n\nCheck YOUR WINS section to see if you won any cars.\nSelect a car and click BUY to purchase within 15 minutes.');
+            
+            updateCarsGrid();
+            updateWinsList();
+            updateUI();
+        }
+
+        // Determine winners based on highest bids
+        function determineWinners() {
+            // Clear existing wins
+            STATE.user.wins = [];
+            
+            // For each car that the user has bid on, check if they are the highest bidder
+            STATE.user.bids.forEach(userBid => {
+                const car = STATE.cars.find(c => c.id === userBid.carId);
+                if (!car || car.status === 'sold') return;
+                
+                // Check if user has the highest bid
+                const allBids = car.bids || [];
+                if (allBids.length === 0) return;
+                
+                // Sort bids by amount (highest first) then by timestamp (earliest first)
+                const sortedBids = [...allBids].sort((a, b) => {
+                    if (b.amount !== a.amount) return b.amount - a.amount;
+                    return a.timestampMs - b.timestampMs;
+                });
+                
+                // If user is the highest bidder, they win
+                if (sortedBids[0] && sortedBids[0].userId === 'current') {
+                    const win = {
+                        carId: car.id,
+                        carName: car.displayName,
+                        winningBid: userBid.amount,
+                        timestamp: userBid.timestamp,
+                        selected: false
+                    };
+                    
+                    STATE.user.wins.push(win);
+                    car.isWinner = true;
+                }
+            });
+            
+            if (STATE.user.wins.length > 0) {
+                alert(`🎉 Congratulations! You won ${STATE.user.wins.length} car(s)!`);
+            } else {
+                alert('Sorry, you did not win any cars today. Better luck next time!');
+            }
+            
+            updateWinsList();
+        }
+
+        // Emulate End of Day (11:59 PM)
+        function emulateEndOfDay() {
+            STATE.system.endOfDay = true;
+            STATE.system.phase = 'eod';
+            
+            document.getElementById('phaseBadge').innerHTML = '🌙 END OF DAY - MARKET CLOSED';
+            document.getElementById('phaseBadge').style.background = '#4a2a1a';
+            
+            document.getElementById('eodPanel').classList.remove('hidden');
+            
+            // Generate EOD Summary
+            const totalBids = STATE.user.bids.length;
+            const totalBidFees = totalBids * 1001;
+            const totalWins = STATE.user.wins.length;
+            const carsBought = STATE.user.spoc ? 1 : 0;
+            const walletSpent = 25000 - STATE.user.wallet; // Initial wallet 25000
+            const strikesUsed = STATE.user.strikes;
+            
+            document.getElementById('eodSummary').innerHTML = `
+                <h3 style="color: #ffd966; margin-bottom: 15px;">📊 DAILY SUMMARY</h3>
+                <div style="display: grid; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between; padding: 8px; background: #1a2a3a; border-radius: 8px;">
+                        <span>Total Bids Placed:</span>
+                        <span style="color: #ffd966; font-weight: 600;">${totalBids}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px; background: #1a2a3a; border-radius: 8px;">
+                        <span>Total Bid Fees Spent:</span>
+                        <span style="color: #ff8888;">₹${totalBidFees.toLocaleString()}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px; background: #1a2a3a; border-radius: 8px;">
+                        <span>Cars Won:</span>
+                        <span style="color: #ffd966; font-weight: 600;">${totalWins}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px; background: #1a2a3a; border-radius: 8px;">
+                        <span>Cars Purchased:</span>
+                        <span style="color: #00ff9d; font-weight: 600;">${carsBought}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px; background: #1a2a3a; border-radius: 8px;">
+                        <span>Wallet Balance:</span>
+                        <span style="color: #00ff9d;">₹${STATE.user.wallet.toLocaleString()}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px; background: #1a2a3a; border-radius: 8px;">
+                        <span>Strikes Today:</span>
+                        <span style="color: ${STATE.user.strikes > 0 ? '#ff8888' : '#00ff9d'};">${STATE.user.strikes}/3</span>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: #0a1a1a; border-radius: 8px; border-left: 4px solid #ffd966;">
+                    <p style="color: #aaa; font-size: 12px;">Market will reopen tomorrow at 9:00 AM with new inventory.</p>
+                </div>
+            `;
+            
+            alert('🌙 End of Day reached. Market is now closed. Check your summary below.');
+            
+            updateUI();
+        }
+
+        // Simulate Winner (Quick Demo)
+        function simulateWinner() {
+            if (!STATE.selectedCarForWinner) {
+                alert('Please click on a car first to select it as winner');
+                return;
+            }
+            
+            const car = STATE.cars.find(c => c.id === STATE.selectedCarForWinner);
+            if (!car) return;
+            
+            const userBid = STATE.user.bids.find(b => b.carId === car.id);
+            if (!userBid) {
+                alert('You need to bid on this car first');
+                return;
+            }
+            
+            // Check if already won
+            if (STATE.user.wins.some(w => w.carId === car.id)) {
+                alert('You already won this car');
+                return;
+            }
+            
+            // Add to wins
+            const win = {
+                carId: car.id,
+                carName: car.displayName,
+                winningBid: userBid.amount,
+                timestamp: userBid.timestamp,
+                selected: false
+            };
+            
+            STATE.user.wins.push(win);
+            car.isWinner = true;
+            
+            alert(`🏆 YOU WON ${car.displayName}!\nWinning bid: ₹${userBid.amount.toLocaleString()}\n\nSelect this car in YOUR WINS section to buy it.`);
+            
+            updateWinsList();
+            updateCarsGrid();
+        }
+
+        // Update Wins List
+        function updateWinsList() {
+            const list = document.getElementById('winsList');
+            const buyButton = document.getElementById('buyButton');
+            
+            if (STATE.user.wins.length === 0) {
+                list.innerHTML = '<div style="text-align:center; color:#666; padding:20px;">No wins yet. Bid on cars and then simulate winners.</div>';
+                buyButton.disabled = true;
+                return;
+            }
+            
+            list.innerHTML = STATE.user.wins.map((win, index) => `
+                <div class="win-item ${win.selected ? 'selected' : ''}" onclick="toggleWinSelection(${index})">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <span style="color:#ffd966; font-weight:600;">${win.carName}</span>
+                            <div style="font-size:11px; color:#888; margin-top:5px;">
+                                Won: ₹${win.winningBid.toLocaleString()} at ${win.timestamp}
+                            </div>
+                        </div>
+                        <input type="radio" name="winSelect" class="win-checkbox" ${win.selected ? 'checked' : ''} onclick="event.stopPropagation(); toggleWinSelection(${index})">
+                    </div>
+                </div>
+            `).join('');
+            
+            // Enable/disable buy button based on selection and phase
+            const hasSelection = STATE.user.wins.some(w => w.selected);
+            buyButton.disabled = !hasSelection || !STATE.system.winnersAnnounced;
+            
+            if (!STATE.system.winnersAnnounced && hasSelection) {
+                buyButton.title = 'Wait for winner announcement at 10:01 PM';
+            }
+        }
+
+        // Toggle Win Selection (only one can be selected)
+        function toggleWinSelection(index) {
+            // Deselect all first
+            STATE.user.wins.forEach((win, i) => {
+                win.selected = (i === index) ? !win.selected : false;
+            });
+            
+            // Update selected win
+            STATE.user.selectedWinForBuy = STATE.user.wins.find(w => w.selected) || null;
+            
+            updateWinsList();
+            
+            // Show countdown if a car is selected and winners announced
+            if (STATE.user.selectedWinForBuy && STATE.system.winnersAnnounced) {
+                startPaymentTimer();
+                document.getElementById('countdownSection').classList.remove('hidden');
+            } else {
+                document.getElementById('countdownSection').classList.add('hidden');
+            }
+        }
+
+        // Start Payment Timer
+        function startPaymentTimer() {
+            let timeLeft = 900; // 15 minutes
+            STATE.user.paymentDeadline = Date.now() + timeLeft * 1000;
+            
+            const timer = setInterval(() => {
+                const now = Date.now();
+                const diff = Math.max(0, Math.floor((STATE.user.paymentDeadline - now) / 1000));
+                
+                const mins = Math.floor(diff / 60);
+                const secs = diff % 60;
+                document.getElementById('paymentTimer').textContent = 
+                    `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+                
+                if (diff <= 0) {
+                    clearInterval(timer);
+                    // Payment timeout - add strike
+                    if (STATE.user.selectedWinForBuy) {
+                        addStrike();
+                        document.getElementById('countdownSection').classList.add('hidden');
+                        alert('⚠️ Payment timeout! Strike added. ₹1001 forfeited.');
+                        
+                        // Remove selection
+                        STATE.user.wins.forEach(w => w.selected = false);
+                        STATE.user.selectedWinForBuy = null;
+                        updateWinsList();
+                    }
+                }
+            }, 1000);
+        }
+
+        // Pay Advance - FIXED BUY FUNCTIONALITY
+        function payAdvance() {
+            if (!STATE.user.selectedWinForBuy) {
+                alert('Select a car to buy first');
+                return;
+            }
+            
+            if (!STATE.system.winnersAnnounced) {
+                alert('Please wait for winner announcement at 10:01 PM');
+                return;
+            }
+            
+            if (STATE.user.wallet < 100001) {
+                alert('Insufficient balance for advance payment');
+                return;
+            }
+            
+            // Deduct advance
+            STATE.user.wallet -= 100001;
+            
+            // Generate SPOC with Indian names and phone numbers
+            const spocData = [
+                { name: 'Rajesh Kumar', designation: 'Senior Sales Manager', phone: '+91 98765 43210', email: 'rajesh.kumar@tatamotors.com' },
+                { name: 'Priya Singh', designation: 'Customer Relations Head', phone: '+91 99887 66554', email: 'priya.singh@hyundai.com' },
+                { name: 'Vikram Mehta', designation: 'Dealership SPOC', phone: '+91 91234 56789', email: 'vikram.mehta@mahindra.com' },
+                { name: 'Neha Gupta', designation: 'Account Manager', phone: '+91 97654 32109', email: 'neha.gupta@honda.com' },
+                { name: 'Arun Sharma', designation: 'Sales Consultant', phone: '+91 95678 90123', email: 'arun.sharma@toyota.com' },
+                { name: 'Sunita Patel', designation: 'Customer Success Manager', phone: '+91 93456 78901', email: 'sunita.patel@mgmotor.com' },
+                { name: 'Amit Verma', designation: 'Senior Executive', phone: '+91 94567 89012', email: 'amit.verma@kia.com' }
+            ];
+            
+            const spoc = spocData[Math.floor(Math.random() * spocData.length)];
+            
+            STATE.user.spoc = {
+                ...spoc,
+                reference: 'VIN-' + String(Math.floor(Math.random()*10000)).padStart(4,'0'),
+                carName: STATE.user.selectedWinForBuy.carName
+            };
+            
+            // Show SPOC with beautiful layout
+            document.getElementById('spocDetails').innerHTML = `
+                <div class="spoc-card">
+                    <div style="text-align:center; margin-bottom:20px;">
+                        <span style="background:var(--rose-gold); color:black; padding:5px 15px; border-radius:20px; font-weight:600;">
+                            🏆 PURCHASE CONFIRMED
+                        </span>
+                    </div>
+                    
+                    <div class="spoc-contact">
+                        <div class="contact-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="contact-details">
+                            <div class="contact-name">${STATE.user.spoc.name}</div>
+                            <div class="contact-designation">${STATE.user.spoc.designation}</div>
+                            <div class="contact-phone">
+                                <i class="fas fa-phone-alt" style="margin-right:8px;"></i>${STATE.user.spoc.phone}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="spoc-field">
+                        <div class="spoc-label">EMAIL</div>
+                        <div class="spoc-value">${STATE.user.spoc.email}</div>
+                    </div>
+                    
+                    <div class="spoc-field">
+                        <div class="spoc-label">CAR BOOKED</div>
+                        <div class="spoc-value">${STATE.user.spoc.carName}</div>
+                    </div>
+                    
+                    <div class="spoc-field">
+                        <div class="spoc-label">REFERENCE NUMBER</div>
+                        <div class="spoc-value">${STATE.user.spoc.reference}</div>
+                    </div>
+                    
+                    <div style="margin-top:20px; padding:15px; background:#0a1a1a; border-radius:10px; border-left:4px solid var(--primary-green);">
+                        <p style="color:#00ff9d; font-size:14px;"><i class="fas fa-check-circle"></i> ADVANCE PAID: ₹1,00,001</p>
+                        <p class="info-text" style="margin-top:8px;">Complete the purchase within 24 hours. Contact your SPOC for test drive and paperwork.</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('spocPanel').classList.remove('hidden');
+            document.getElementById('countdownSection').classList.add('hidden');
+            
+            // Mark car as sold and remove from wins
+            const car = STATE.cars.find(c => c.id === STATE.user.selectedWinForBuy.carId);
+            if (car) {
+                car.status = 'sold';
+            }
+            
+            // Remove from wins and reset selection
+            STATE.user.wins = STATE.user.wins.filter(w => !w.selected);
+            STATE.user.selectedWinForBuy = null;
+            
+            updateUI();
+            updateCarsGrid();
+            updateWinsList();
+            
+            alert('✅ Advance paid successfully! Your SPOC details are displayed below. Contact within 24 hours.');
+        }
+
+        // Update Bids List
+        function updateBidsList() {
+            const list = document.getElementById('bidsList');
+            
+            if (STATE.user.bids.length === 0) {
+                list.innerHTML = '<div style="text-align:center; color:#666; padding:20px;">No bids yet</div>';
+                return;
+            }
+            
+            list.innerHTML = STATE.user.bids.map(bid => {
+                const isWinner = STATE.user.wins.some(w => w.carId === bid.carId);
+                return `
+                    <div style="border-bottom:1px solid #2a4a3a; padding:10px 0;">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span><strong>${bid.carName}</strong> ${isWinner ? '🏆' : ''}</span>
+                            <span style="color:var(--primary-green);">₹${bid.amount.toLocaleString()}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; color:#888;">
+                            <span>Fee: ₹1,001</span>
+                            <span>${bid.timestamp}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Strike Functions
+        function addStrike() {
+            if (STATE.user.strikes < 3) {
+                STATE.user.strikes++;
+                document.getElementById('strikeCount').textContent = STATE.user.strikes;
+                
+                if (STATE.user.strikes >= 3) {
+                    STATE.user.isBlocked = true;
+                    alert('🚫 YOU ARE BLOCKED - 3 STRIKES');
+                }
+            }
+            updateUI();
+        }
+
+        function resetStrikes() {
+            STATE.user.strikes = 0;
+            STATE.user.isBlocked = false;
+            document.getElementById('strikeCount').textContent = '0';
+            updateUI();
+        }
+
+        // Withdrawal Functions
+        function showWithdrawalModal() {
+            document.getElementById('withdrawalModal').classList.add('active');
+            updateTaxCalculation();
+        }
+
+        function closeWithdrawalModal() {
+            document.getElementById('withdrawalModal').classList.remove('active');
+        }
+
+        function updateTaxCalculation() {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+            const tds = amount * 0.018;
+            const gstOnTds = tds * 0.18;
+            const netAmount = amount - tds - gstOnTds;
+            
+            document.getElementById('taxBreakup').innerHTML = `
+                <p>Withdrawal Amount: ₹${amount.toFixed(2)}</p>
+                <p style="color:#ff8888;">TDS (1.8%): -₹${tds.toFixed(2)}</p>
+                <p style="color:#ff8888;">GST on TDS (18%): -₹${gstOnTds.toFixed(2)}</p>
+                <p style="color:#00ff9d; font-size:16px; margin-top:10px;">Net Credit: ₹${netAmount.toFixed(2)}</p>
+            `;
+        }
+
+        function processWithdrawal() {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            if (amount > STATE.user.wallet) {
+                alert('Insufficient balance');
+                return;
+            }
+            
+            STATE.user.wallet -= amount;
+            updateUI();
+            closeWithdrawalModal();
+            alert(`✅ Withdrawal initiated: ₹${amount.toLocaleString()}\nNet after tax will be credited within 2-3 days.`);
+        }
+
+        function addFunds() {
+            STATE.user.wallet += 10000;
+            updateUI();
+        }
+
+        // Timer
+        function startMarketTimer() {
+            setInterval(() => {
+                const now = new Date();
+                let hours = now.getHours();
+                const minutes = String(now.getMinutes()).padStart(2,'0');
+                const seconds = String(now.getSeconds()).padStart(2,'0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                
+                document.getElementById('marketTimer').innerHTML = 
+                    `${String(hours).padStart(2,'0')}:${minutes}:${seconds} ${ampm}`;
+            }, 1000);
+        }
+
+        function updateUI() {
+            document.getElementById('walletDisplay').textContent = '₹' + STATE.user.wallet.toLocaleString();
+            document.getElementById('strikeCount').textContent = STATE.user.strikes;
+        }
+
+        // Expose functions globally
+        window.placeBid = placeBid;
+        window.simulateWinner = simulateWinner;
+        window.toggleWinSelection = toggleWinSelection;
+        window.payAdvance = payAdvance;
+        window.addStrike = addStrike;
+        window.resetStrikes = resetStrikes;
+        window.showWithdrawalModal = showWithdrawalModal;
+        window.closeWithdrawalModal = closeWithdrawalModal;
+        window.processWithdrawal = processWithdrawal;
+        window.addFunds = addFunds;
+        window.emulate10PM = emulate10PM;
+        window.emulateWinnerAnnouncement = emulateWinnerAnnouncement;
+        window.emulateEndOfDay = emulateEndOfDay;
+        window.updateTaxCalculation = updateTaxCalculation;
+    </script>
+</body>
+</html>
